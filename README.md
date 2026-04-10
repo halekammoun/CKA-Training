@@ -1,7 +1,7 @@
 # CKA Training
 
 <p align="center">
-  <img src="badge_cka.png" alt="CKA Badge" width="220"/>
+  <img src="badge_cka.png" alt="CKA Badge" width="200"/>
 </p>
 
 ### Introduction
