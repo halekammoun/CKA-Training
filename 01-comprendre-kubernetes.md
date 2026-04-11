@@ -187,7 +187,7 @@ pas de port.
 ```
 ### Scénario : création d’un Deployment
 <p align="center">
-  <img src="deployment.png" alt="dep" width="200"/>
+  <img src="deployment.png" alt="dep" width="700"/>
 </p>
 
 Tu exécutes :
@@ -260,6 +260,6 @@ ReplicaSet détecte :
 3 voulus
 *2 existants*
 Il recrée :
-new pod nginx
-Scheduler choisit node.
+new pod nginx  
+Scheduler choisit node.  
 kueblet reçoit instruction etc
