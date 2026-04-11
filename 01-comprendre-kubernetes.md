@@ -108,6 +108,7 @@ Le cluster est composé de deux parties principales :
   <img src="architecture.png" alt="arch" width="700"/>
 </p>
 Chaque composant communique via des **ports** spécifiques.
+
 ### Control Plane
 #### kube-apiserver
 Point d’entrée du cluster.
@@ -184,3 +185,81 @@ Communication locale :
 kubelet → runtime (socket unix) 
 pas de port.
 ```
+### Scénario : création d’un Deployment
+<p align="center">
+  <img src="deployment.png" alt="dep" width="200"/>
+</p>
+
+Tu exécutes :
+```bash
+kubectl create deployment nginx --image=nginx --replicas=3
+```
+Tu demandes à Kubernetes :
+créer un Deployment
+avec 3 Pods
+utilisant l’image nginx
+#### Étape 1 — kubectl contacte l’API Server
+```bash
+kubectl → API Server
+```
+
+L’API server reçoit :
+Deployment nginx replicas=3
+#### Étape 2 — API Server sauvegarde dans etcd
+L’API server enregistre l’état désiré dans etcd
+etcd :
+Deployment nginx
+replicas = 3
+Kubernetes sait maintenant qu’il doit maintenir 3 Pods.
+#### Étape 3 — Controller Manager crée ReplicaSet
+Le Deployment controller crée :
+```bash
+Deployment → ReplicaSet → Pods
+```
+Donc :
+```bash
+nginx-deployment → nginx-rs
+```
+ReplicaSet veut :
+3 pods
+#### Étape 4 — Scheduler choisit les nodes
+Le scheduler prend chaque Pod :pod1, pod2 et pod3
+Il décide :
+```bash
+pod1 → node1
+pod2 → node2
+pod3 → node2
+```
+Selon : CPU, RAM...
+
+#### Étape 5 — API Server informe kubelet
+
+Chaque kubelet reçoit instruction :
+create pod nginx
+
+Exemple :
+```bash
+API server → kubelet node1
+API server → kubelet node2
+```
+
+#### Étape 6 — kubelet lance containers
+
+kubelet appelle container runtime :
+```bash
+kubelet → container runtime
+container runtime → container nginx
+```
+*Si un Pod tombe*
+
+Exemple :
+```bash
+pod nginx node2 crash
+```
+ReplicaSet détecte :
+3 voulus
+*2 existants*
+Il recrée :
+new pod nginx
+Scheduler choisit node.
+kueblet reçoit instruction etc
