@@ -415,8 +415,9 @@ Voir avec IP :
 kubectl get pods -n kube-system -o wide
 ```
 <p align="center">
-  <img src="kube-addresses.png" alt="address" width="700"/>
+  <img src="kube-adresses.png" alt="address" width="700"/>
 </p>
+
 ---
 
 ## 2. Voir tous les namespaces
@@ -465,10 +466,10 @@ ls /etc/kubernetes/
 * admin.conf → accès kubectl cluster
 * kubelet.conf → config kubelet
 * controller-manager.conf
-* scheduler.conf
+* scheduler.conf  
 
 Ces fichiers sont des kubeconfig utilisés par les composants Kubernetes pour se connecter à l’API server, chacun contenant un context (cluster + user + namespace) qui définit comment *s’authentifier* et *communiquer* avec le cluster ; ils sont générés automatiquement par kubeadm init et utilisés respectivement par kubectl (admin.conf), kubelet (kubelet.conf), controller-manager (controller-manager.conf) et scheduler (scheduler.conf) pour accéder au cluster.
----
+
 
 ## Comment démarre le cluster?
 le premier composant qui démarre est kubelet (celui dans le master node), et c’est lui qui lance le control-plane via les static pods. 
@@ -503,19 +504,19 @@ pour lister les static pods créé par le kubelet on fait
 crictrl ps
 ```
 ---
-#QUESTION
+#QUESTION  
 The kubernetes cluster is not working. Some components are dowb after a cluster migration.
 Troubleshoot the cluster and fix the cluster
 ---
-#CORRECTION
+#CORRECTION  
 Après une migration, le cluster peut tomber car **kube-apiserver pointe vers l’ancienne adresse etcd**.  
 C’est une **erreur commune**, car l’API server dépend toujours de **etcd pour démarrer**.  
-1. Vérifier les composants
+1. Vérifier les composants  
 ```bash
 crictl ps
 ```
-On voit généralement *kube-apiserver en crash* et etcd *Running*.
-2. Modifier static pod kube-apiserver
+On voit généralement *kube-apiserver en crash* et etcd *Running*.  
+2. Modifier static pod kube-apiserver  
 
 ```bash
 cd /etc/kubernetes/manifests
