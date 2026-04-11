@@ -509,8 +509,10 @@ The kubernetes cluster is not working. Some components are dowb after a cluster 
 Troubleshoot the cluster and fix the cluster
 ---
 #CORRECTION  
+
 Après une migration, le cluster peut tomber car **kube-apiserver pointe vers l’ancienne adresse etcd**.  
 C’est une **erreur commune**, car l’API server dépend toujours de **etcd pour démarrer**.  
+
 1. Vérifier les composants  
 ```bash
 crictl ps
