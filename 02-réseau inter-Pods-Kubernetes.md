@@ -137,4 +137,4 @@ payload = 192.168.0.2 → 192.168.1.2
 
 Il l’envoie au Pod B.
 
-l'Overlay Network (Pod-Pod Inter Node Communication) est le tunnel créé par CNI.
+l'Overlay Network (Pod-Pod Inter Node Communication) est le tunnel créé par CNI. 
