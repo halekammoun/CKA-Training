@@ -105,7 +105,7 @@ Le cluster est composé de deux parties principales :
 - Control Plane → décide et gère
 - Worker Nodes → exécutent les applications
 <p align="center">
-  <img src="architecture.png" alt="arch" width="200"/>
+  <img src="architecture.png" alt="arch" width="700"/>
 </p>
 Chaque composant communique via des **ports** spécifiques.
 ### Control Plane
