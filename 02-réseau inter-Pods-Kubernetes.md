@@ -89,13 +89,15 @@ Le CNI fait :
 routing entre subnets Pods
 encapsulation overlay
 décapsulation côté destination
-```bash
+```
 
 **Exemple de communication**
+
 
 <p align="center">
   <img src="cluster_network.png" alt="network" width="300"/>
 </p>
+
 
 Pod A veut parler à Pod B
 
