@@ -100,3 +100,87 @@ Kubernetes permet :
 - load balancing interne et externe
 
 # Architecture kubernetes
+Kubernetes est une plateforme qui permet d’exécuter des applications sous forme de Pods sur plusieurs machines appelées Nodes.
+Le cluster est composé de deux parties principales :
+- Control Plane → décide et gère
+- Worker Nodes → exécutent les applications
+<p align="center">
+  <img src="architecture.png" alt="arch" width="200"/>
+</p>
+Chaque composant communique via des **ports** spécifiques.
+### Control Plane
+#### kube-apiserver
+Point d’entrée du cluster.
+Tout passe par lui : kubectl, kubelet, scheduler et controller manager
+Port : 6443/TCP
+Exemple :
+```bash
+kubectl → API server:6443
+```
+#### etcd
+Base de données du cluster.
+Stocke : pods, nodes, services, configs
+Ports :
+2379/TCP  client
+2380/TCP  peer (HA)
+Communication :
+```bash
+API server → etcd : 2379
+etcd → etcd : 2380
+```
+
+#### kube-scheduler
+
+Décide où lancer les Pods.
+Port : 10259/TCP
+Communication interne control plane.
+
+#### kube-controller-manager
+
+Maintient l’état du cluster.
+
+Exemple :
+```bash
+replicas = 3
+Il recrée pods si besoin.
+```
+Port: 10257/TCP
+### Worker Nodes
+#### kubelet
+
+Agent sur chaque node.
+
+Il :
+reçoit instructions (depuis scheduler par exemple passant par apiserver)
+crée pods
+surveille containers
+Port :10250/TCP
+Communication :
+```bash
+API server → kubelet:10250
+```
+
+#### kube-proxy
+
+Gère le réseau Kubernetes. (on va parler de ça dans la partie services)
+Il :
+crée iptables
+load balancing
+service routing
+Pas de port externe fixe. 
+Il utilise :
+```bash
+iptables / IPVS
+```
+
+#### Container Runtime
+
+Lance containers:
+containerd
+CRI-O
+
+Communication locale :
+```bash
+kubelet → runtime (socket unix) 
+pas de port.
+```
