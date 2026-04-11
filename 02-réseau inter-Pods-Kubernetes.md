@@ -95,7 +95,7 @@ décapsulation côté destination
 
 
 <p align="center">
-  <img src="cluster_network.png" alt="network" width="550"/>
+  <img src="cluster_network.png" alt="network" width="500"/>
 </p>
 
 
