@@ -97,6 +97,7 @@ Kubernetes est une plateforme qui permet d’exécuter des applications sous for
 Le cluster est composé de deux parties principales :
 - Control Plane → décide et gère
 - Worker Nodes → exécutent les applications
+
 <p align="center">
   <img src="cluster.png" alt="custer" width="700"/>
 </p>
@@ -107,12 +108,14 @@ Chaque composant communique via des *ports* spécifiques.
 <p align="center">
   <img src="architecture.png" alt="arch" width="700"/>
 </p>
+
 ### Control Plane
 #### kube-apiserver
 Point d’entrée du cluster.
 Tout passe par lui : kubectl, kubelet, scheduler et controller manager
 Port : 6443/TCP
 Exemple :
+
 ```bash
 kubectl → API server:6443
 ```
