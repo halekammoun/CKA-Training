@@ -46,7 +46,7 @@ Join us on this journey and become a certified Kubernetes administrator! 🚀
 
 ### 📚 Table of Contents
 
-- [Comprendre Kubernetes](01-comprendre-kubernetes.md)  
-- [comprendre le réseau inter-pods Kubernetes](02-réseau inter-Pods-Kubernetes.md) 
+- [Comprendre Kubernetes](01-comprendre-kubernetes.md)
+- [comprendre le réseau inter-pods Kubernetes](02-réseau-inter-Pods-Kubernetes.md)
 - [Installer Kubernetes](03-installer-kubernetes.md) 
-- [Interagir avec Kubernetes](04-interagir-avec-kubernetes.md)
+- [Interagir avec Kubernetes](04-intéragir-avec-kubernetes.md)
