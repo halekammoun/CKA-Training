@@ -58,6 +58,8 @@ Calico
 Cilium
 Weave
 ```
+---
+
 ### Flannel vs Calico
 **Flannel** : utilisé pour la simplicité et la rapidité de mise en place, il fournit uniquement la connectivité réseau entre Pods sans NetworkPolicy (donc pas de pare-feu Kubernetes).
 **Calico** : utilisé pour la sécurité, il fournit la connectivité réseau avec NetworkPolicy native (NetworkPolicy est un pare-feu Kubernetes qui permet d’autoriser ou bloquer le trafic entre Pods).
@@ -92,6 +94,7 @@ routing entre subnets Pods
 encapsulation overlay
 décapsulation côté destination
 ```
+---
 
 **Exemple de communication**
 

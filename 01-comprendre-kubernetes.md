@@ -29,13 +29,6 @@ Kubernetes est un outil d’orchestration de containers qui permet de gérer des
 - machines virtuelles  
 - cloud  
 
-Kubernetes gère aussi automatiquement :
-
-- le scaling  
-- la sécurité  
-- la persistance  
-- le load balancing  
-
 ---
 
 # Fonctionnalités
@@ -105,10 +98,15 @@ Le cluster est composé de deux parties principales :
 - Control Plane → décide et gère
 - Worker Nodes → exécutent les applications
 <p align="center">
+  <img src="cluster.png" alt="custer" width="700"/>
+</p>
+
+---
+Chaque composant communique via des *ports* spécifiques.
+
+<p align="center">
   <img src="architecture.png" alt="arch" width="700"/>
 </p>
-Chaque composant communique via des **ports** spécifiques.
-
 ### Control Plane
 #### kube-apiserver
 Point d’entrée du cluster.
