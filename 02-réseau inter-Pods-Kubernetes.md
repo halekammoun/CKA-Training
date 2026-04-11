@@ -103,7 +103,7 @@ Pod A veut parler à Pod B
 
 Pod A = 192.168.0.2 (Node1)
 Pod B = 192.168.1.2 (Node2)
-Step 1 — Pod A envoie le paquet
+#### Step 1 — Pod A envoie le paquet
 SRC = 192.168.0.2
 DST = 192.168.1.2
 
@@ -113,7 +113,7 @@ Pod A voit que destination n’est pas dans :
 
 Donc il envoie vers gateway CNI.
 
-Step 2 — CNI Node1 encapsule
+#### Step 2 — CNI Node1 encapsule
 
 Le CNI transforme :
 
@@ -126,12 +126,12 @@ payload = 192.168.0.2 → 192.168.1.2
 
 Donc le trafic passe par réseau nodes.
 
-Step 3 — transport entre nodes
+#### Step 3 — transport entre nodes
 Node1 10.1.1.2 → Node2 10.1.1.3
 
 via réseau physique.
 
-Step 4 — CNI Node2 décapsule
+#### Step 4 — CNI Node2 décapsule
 
 Le CNI Node2 reçoit :
 
