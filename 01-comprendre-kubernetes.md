@@ -98,3 +98,5 @@ Kubernetes permet :
 - communication entre containers  
 - accès externe  
 - load balancing interne et externe
+
+# Architecture kubernetes

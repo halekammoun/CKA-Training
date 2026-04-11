@@ -362,34 +362,6 @@ Génère nouvelle commande join si token expiré.
 
 ---
 
-# 14. Tester communication pods
-
-```bash
-kubectl create deployment nginx --image=nginx --replicas=3
-```
-
-Crée 3 pods nginx pour tester réseau.
-
-```bash
-kubectl get pods -o wide
-```
-
-Affiche pods avec IP.
-
-```bash
-kubectl exec -it <pod> -- bash
-```
-
-Accède à un pod.
-
-```bash
-ping <pod-ip>
-```
-
-Teste communication entre pods.
-
----
-
 # Vérification finale
 
 ```bash
