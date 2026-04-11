@@ -415,7 +415,7 @@ Voir avec IP :
 kubectl get pods -n kube-system -o wide
 ```
 <p align="center">
-  <img src="kube-adresses.png" alt="address" width="700"/>
+  <img src="kube-adresses.png" alt="address" width="900"/>
 </p>
 
 ---
