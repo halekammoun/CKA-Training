@@ -50,3 +50,4 @@ Join us on this journey and become a certified Kubernetes administrator! 🚀
 - [comprendre le réseau inter-pods Kubernetes](02-réseau-inter-Pods-Kubernetes.md)
 - [Installer Kubernetes](03-installer-kubernetes.md) 
 - [Interagir avec Kubernetes](04-intéragir-avec-kubernetes.md)
+- [Pods et Namespaces](05-Pods-et-Namespaces.md)
