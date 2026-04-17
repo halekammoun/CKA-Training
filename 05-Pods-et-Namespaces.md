@@ -114,3 +114,136 @@ kubectl run busybox --image=busybox:1.36.1 --rm -it --restart=Never -- wget @ip-
 * chaque Pod reçoit une IP unique
 * chaque node possède un sous-réseau (Pod CIDR)
 * le CNI (ex: Flannel) permet la communication entre Pods sur différents nodes
+
+#### Utiliser command et args dans un Pod
+Dans un Pod, on peut :
+* utiliser le **ENTRYPOINT** et **CMD** de l’image
+* ou les **remplacer** avec :
+
+  * `command` → remplace ENTRYPOINT
+  * `args` → remplace CMD
+
+Cela permet de définir exactement ce que le conteneur doit exécuter à l'initialisation.
+Créer un Pod qui :
+* utilise l’image `busybox:1.36.1`
+* affiche la date toutes les 10 secondes en boucle
+```bash
+kubectl run mypod --image=busybox:1.36.1 --dry-run=client -o yaml -- /bin/sh -c "while true; do date; sleep 10; done" > pod.yaml
+```
+```yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: mypod
+    image: busybox:1.36.1
+    args:
+    - /bin/sh
+    - -c
+    - while true; do date; sleep 10; done
+```
+Alternative avec command + args
+
+```yaml id="8y6r2j"
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: mypod
+    image: busybox:1.36.1
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do date; sleep 10; done"]
+```
+```bash
+kubectl apply -f pod.yaml
+```
+Étape 4 : Vérifier le fonctionnement
+
+```bash 
+kubectl logs mypod -f
+```
+
+---
+# Le Namespace
+
+
+Un **namespace** permet d’isoler les ressources Kubernetes (Pods, Services…) dans un cluster.
+Par défaut, les objets sont créés dans le namespace `default`, mais on peut en créer d’autres pour organiser ou séparer les environnements (ex: dev, prod…).
+
+
+Créer un namespace
+
+```bash 
+kubectl create namespace code-red
+```
+
+Vérifier :
+
+```bash
+kubectl get namespaces
+```
+
+Créer un Pod dans ce namespace
+
+```bash
+kubectl run pod --image=nginx:1.25.1 -n code-red
+```
+
+Lister les Pods :
+
+```bash 
+kubectl get pods -n code-red
+```
+
+---
+
+Définir un namespace par défaut
+
+```bash
+kubectl config set-context --current --namespace=code-red
+```
+
+Vérifier :
+
+```bash 
+kubectl config view --minify | grep namespace:
+```
+Maintenant, toutes les commandes utilisent `code-red` sans `-n`.
+
+Utiliser sans préciser le namespace
+
+```bash 
+kubectl get pods
+```
+
+Revenir au namespace default
+
+```bash
+kubectl config set-context --current --namespace=default
+```
+Supprimer le namespace
+
+```bash 
+kubectl delete namespace code-red
+```
+Tous les objets dans ce namespace seront supprimés automatiquement.
+
+---
+# LAB
+```bash 
+1. Create a new Pod named nginx running the image nginx:1.17.10 .
+Expose the container port 80 . The Pod should live in the namespace named j43 .
+Get the details of the Pod including its IP address.
+Create a temporary Pod that uses the busybox:1.36.1 image to execute a wget command inside of the container. The wget command should access the endpoint exposed by the nginx container. You should see the HTML response body rendered in the terminal.
+Get the logs of the nginx container.
+Add the environment variables DB_URL=postgresql://mydb:5432 and DB_USERNAME=admin to the container of the nginx Pod.
+Open a shell for the nginx container and inspect the contents of the current directory ls -l . Exit out of the container.
+2. Create a YAML manifest for a Pod named loop in the namespace j43 that runs the busybox:1.36.1 image in a container. The container should run the following command: for i in {1..10}; do echo "Welcome $i times"; done . Create the Pod from the YAML manifest.
+What’s the status of the Pod?
+Edit the Pod named loop . Change the command to run in an endless loop. Each iteration should echo the current date.
+Inspect the events and the status of the Pod loop .
+```

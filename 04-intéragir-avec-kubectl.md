@@ -83,12 +83,15 @@ status :
 ```bash
 replicas = 1
 ```
+
 Kubernetes va créer 2 pods pour atteindre 3.
+
 ---
 # Using kubectl
 
 `kubectl` est l’outil principal pour interagir avec un cluster Kubernetes depuis la ligne de commande.
 L’examen Kubernetes est fortement basé sur l’utilisation de `kubectl`, donc il est important de bien comprendre son fonctionnement.
+
 ### Syntaxe kubectl
 Une commande kubectl suit cette structure :
 
@@ -144,7 +147,6 @@ Exemple :
 --replicas
 --namespace
 ```
----
 Exemple avec flags :
 
 ```bash
