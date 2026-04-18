@@ -584,7 +584,7 @@ sudo systemctl enable --now cri-docker.socket
 ```
 Configure System Parameters (Persistent)
 ```bash
-sudo vim /etc/sysctl.d/kubernetes.conf
+sudo vim /etc/sysctl.d/k8s.conf
 
 net.bridge.bridge-nf-call-iptables = 1
 net.ipv6.conf.all.forwarding = 1
