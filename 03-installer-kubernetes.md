@@ -511,11 +511,11 @@ pour lister les static pods créé par le kubelet on fait
 crictrl ps
 ```
 ---
-#QUESTION  
+# QUESTION 1
 The kubernetes cluster is not working. Some components are dowb after a cluster migration.
 Troubleshoot the cluster and fix the cluster
 ---
-#CORRECTION  
+# CORRECTION  
 
 Après une migration, le cluster peut tomber car **kube-apiserver pointe vers l’ancienne adresse etcd**.  
 C’est une **erreur commune**, car l’API server dépend toujours de **etcd pour démarrer**.  
@@ -550,3 +550,56 @@ systemctl restart kubelet
 
 kubelet relit le manifest, redémarre kube-apiserver,
 et l’API server peut de nouveau se connecter à etcd.
+
+# QUESTION 2
+Complete these tasks to prepare the system for Kubernetes:
+Set up cri-dockerd:
+
+Install the Debian package:
+~/cri-dockerd_0.3.9.3-0.ubuntu-focal_amd64.deb
+Start the cri-dockerd service.
+Enable and start the systemd service for cri-dockerd.
+
+Configure these system parameters:
+
+Set net.bridge.bridge-nf-call-iptables to 1.
+Set net.ipv6.conf.all.forwarding to 1.
+Set net.ipv4.ip_forward to 1.
+
+# Correction
+Install cri-dockerd
+```bash
+cd ~
+sudo dpkg -i cri-dockerd_0.3.9.3-0.ubuntu-focal_amd64.deb
+sudo apt-get install -f -y
+```
+Start cri-dockerd Service
+```bash
+sudo systemctl start cri-docker
+```
+Enable and Start Service
+```bash
+sudo systemctl enable --now cri-docker.socket
+```
+Configure System Parameters (Persistent)
+```bash
+sudo vim /etc/sysctl.d/kubernetes.conf
+
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv6.conf.all.forwarding = 1
+net.ipv4.ip_forward = 1
+```
+
+Apply Configuration
+```bash
+sudo sysctl --system
+```
+Final Check
+
+```bash
+sysctl net.bridge.bridge-nf-call-iptables
+sysctl net.ipv6.conf.all.forwarding
+sysctl net.ipv4.ip_forward
+
+Expected output:= 1
+```
