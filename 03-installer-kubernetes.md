@@ -512,8 +512,8 @@ crictrl ps
 ```
 ---
 # QUESTION 1
-The kubernetes cluster is not working. Some components are dowb after a cluster migration.
-Troubleshoot the cluster and fix the cluster
+The kubernetes cluster is not working. Some components are down after a cluster migration.
+Troubleshoot and fix the cluster
 ---
 # CORRECTION  
 
@@ -567,6 +567,7 @@ Set net.ipv6.conf.all.forwarding to 1.
 Set net.ipv4.ip_forward to 1.
 
 # Correction
+Ref: https://kubernetes.io/docs/setup/production-environment/container-runtimes/
 Install cri-dockerd
 ```bash
 cd ~
