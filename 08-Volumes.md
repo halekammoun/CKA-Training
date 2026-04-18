@@ -12,7 +12,7 @@ Un **volume** est un répertoire partagé :
 * qui peut persister selon le type
 
 <p align="center">
-  <img src="vol.png" alt="kube" width="700"/>
+  <img src="vol.png" alt="vol" width="700"/>
 </p>
 
 #### Objectifs des volumes
@@ -158,16 +158,8 @@ ls /tmp
 # LAB
 
 ```bash
- Create a Pod YAML manifest with two containers that use the image
-alpine:3.22.2 . Provide a command for both containers that keeps
-them running forever.
-Define a volume of type emptyDir for the Pod. Container 1 should
-mount the volume to path /etc/a, and Container 2 should mount the
-volume to path /etc/b.
-Open an interactive shell for Container 1 and create the directory data
-in the mount path. Navigate to the directory and create the file
-hello.txt with the contents “Hello World.” Exit out of the container.
-Open an interactive shell for Container 2 and navigate to the directory
-/etc/b/data. Inspect the contents of file hello.txt. Exit out of the
-container.
+Create a Pod YAML manifest with two containers that use the image alpine:3.22.2 . Provide a command for both containers that keeps them running forever.
+Define a volume of type emptyDir for the Pod. Container 1 should mount the volume to path /etc/a, and Container 2 should mount the volume to path /etc/b.
+Open an interactive shell for Container 1 and create the directory data in the mount path. Navigate to the directory and create the file hello.txt with the contents “Hello World.” Exit out of the container.
+Open an interactive shell for Container 2 and navigate to the directory /etc/b/data. Inspect the contents of file hello.txt. Exit out of the container.
 ```
