@@ -12,7 +12,7 @@ Un **volume** est un répertoire partagé :
 * qui peut persister selon le type
 
 <p align="center">
-  <img src="vol.png" alt="vol" width="700"/>
+  <img src="volll.png" alt="volll" width="700"/>
 </p>
 
 #### Objectifs des volumes
