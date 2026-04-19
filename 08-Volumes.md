@@ -166,12 +166,11 @@ Open an interactive shell for Container 2 and navigate to the directory /etc/b/d
 ---
 # QUESTION 4
 
-```bash
 Update the existing deployment synergy-leverager, adding a co-located container named sidecar using the busybox:stable image to the existing pod.
 The new co-located container has to run the following command: /bin/sh -c "tail -n+1 -f /var/log/synergy-leverager.
 (in our case we will use the nginx image since we don't have the synergy-leverager image and the command will be /bin/sh -c "tail -n+1 -f /var/log/nginx/access.log")
 Use a volume mounted at /var/log to make the log file synergy-leverager.log (in our case access.log) available to the co-located container.
-```
+
 before answering you should run this manifest
 ```bash
 apiVersion: apps/v1
