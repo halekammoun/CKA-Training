@@ -136,7 +136,7 @@ spec:
 ---
 ## PriorityClass avec Deployment
 
-Un **PriorityClass** est une ressource Kubernetes qui permet de définir le **niveau d’importance d’un Pod** grâce à une valeur numérique.
+Un **PriorityClass** est une ressource Kubernetes non sensible au namespace (global) qui permet de définir le **niveau d’importance d’un Pod** grâce à une valeur numérique.
 
 Plus la valeur est élevée → plus le Pod est prioritaire.
 
@@ -330,7 +330,7 @@ kubectl patch deployment busybox-logger -n priority -p '{"spec":{"template":{"sp
 ou bien (Recommended method)
 
 ```bash
-kibectl edit deployment busybox-logger
+kibectl edit deployment busybox-logger -n priority
 ```
 Vérifier le rollout
 
