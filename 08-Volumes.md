@@ -163,3 +163,80 @@ Define a volume of type emptyDir for the Pod. Container 1 should mount the volum
 Open an interactive shell for Container 1 and create the directory data in the mount path. Navigate to the directory and create the file hello.txt with the contents “Hello World.” Exit out of the container.
 Open an interactive shell for Container 2 and navigate to the directory /etc/b/data. Inspect the contents of file hello.txt. Exit out of the container.
 ```
+---
+# QUESTION 4
+
+```bash
+Update the existing deployment synergy-leverager, adding a co-located container named sidecar using the busybox:stable image to the existing pod.
+The new co-located container has to run the following command: /bin/sh -c "tail -n+1 -f /var/log/synergy-leverager.
+(in our case we will use the nginx image since we don't have the synergy-leverager image and the command will be /bin/sh -c "tail -n+1 -f /var/log/nginx/access.log")
+Use a volume mounted at /var/log to make the log file synergy-leverager.log (in our case access.log) available to the co-located container.
+```
+before answering you should run this manifest
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synergy-leverager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: synergy
+  template:
+    metadata:
+      labels:
+        app: synergy
+    spec:
+      containers:
+      - name: main
+        image: nginx
+```
+car NGINX écrit dans :
+
+/var/log/nginx/access.log
+/var/log/nginx/error.log
+
+---
+# CORRECTION
+```bash
+kubectl edit deploy synergy-leverager
+```
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synergy-leverager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: synergy
+  template:
+    metadata:
+      labels:
+        app: synergy
+    spec:
+      volumes:
+      - name: log-volume
+        emptyDir: {}
+      containers:
+      - name: main
+        image: nginx
+        volumeMounts:
+        - name: log-volume
+          mountPath: /var/log
+      - name: sidecar
+        image: busybox:stable
+        command: ["/bin/sh", "-c", "tail -n+1 -f /var/log/nginx/access.log"]
+        volumeMounts:
+        - name: log-volume
+          mountPath: /var/log
+```
+```bash
+kubectl get pods
+```
+```bash
+kubectl exec -it <pod-name> -c main -- ls /var/log
+kubectl exec -it <pod-name> -c sidecar -- ls /var/log
+```

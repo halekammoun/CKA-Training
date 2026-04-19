@@ -133,8 +133,75 @@ spec:
 
 **RollingUpdate (default)** → zéro downtime
 **Recreate** → supprime tout puis recrée → downtime
-
 ---
+## PriorityClass avec Deployment
+
+Un **PriorityClass** est une ressource Kubernetes qui permet de définir le **niveau d’importance d’un Pod** grâce à une valeur numérique.
+
+Plus la valeur est élevée → plus le Pod est prioritaire.
+
+
+Le scheduler Kubernetes utilise la priorité pour :
+
+* décider quel Pod planifier en premier
+* **supprimer** des Pods moins prioritaires si le cluster manque de ressources
+
+La PriorityClass s’applique aux **Pods**, même s’ils sont créés via un **Deployment**.
+
+#### Exemple de PriorityClass
+
+```yaml 
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: 100000
+globalDefault: false
+description: "Application critique"
+```
+
+#### Exemple avec Deployment
+
+```yaml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web-app
+  template:
+    metadata:
+      labels:
+        app: web-app
+    spec:
+      priorityClassName: high-priority
+      containers:
+      - name: nginx
+        image: nginx
+```
+
+Tous les Pods créés par ce Deployment auront cette priorité.
+
+
+#### En cas de manque de ressources
+
+Si le cluster est plein :
+
+* Kubernetes peut supprimer des Pods d’un autre Deployment (faible priorité)
+* pour lancer les Pods du Deployment critique
+
+Exemple de scénario
+
+```text
+Deployment A (priority=low) → Pods running
+Deployment B (priority=high) → Pods pending
+
+→ Kubernetes supprime Pods A
+→ lance Pods B
+```
 
 ## Rollback (retour arrière)
 
@@ -179,3 +246,112 @@ Have a look at the Deployment rollout history. Revert the Deployment
 to revision 1.
 Ensure that the Pods use the image nginx:1.23.0 .
 ```
+---
+# QUESTION 3
+
+Perform the following tasks:
+Create a new PriorityClass named high-priority for user workloads with a value that is one less than the highest existing user-defined priority class value.
+Patch the existing Deployment busybox-logger running in the priority namespace to use the high-priority priority class. Ensure that the busybox-logger Deployment rolls out successfully with the new priority class set.
+Note - It is expected that pods from other Deployments running in the priority namespaces are evicted.
+
+Apply these manifests before answering:
+```bash
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: user-defined
+value: 100000
+globalDefault: false
+description: "Existing user priority"
+```
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox-logger
+  namespace: priority
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: busybox-logger
+  template:
+    metadata:
+      labels:
+        app: busybox-logger
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do echo hello; sleep 10; done"]
+```
+---
+# CORRECTION
+
+Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/
+
+Vérifier la valeur existante
+
+```bash
+kubectl get priorityclass
+```
+On a :
+
+```text
+user-defined   100000
+```
+
+Créer la nouvelle PriorityClass
+
+valeur = 100000 - 1 = **99999** 
+
+```yaml
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: 99999
+globalDefault: false
+description: "High priority for user workloads"
+```
+
+```bash
+kubectl apply -f pc.yaml
+```
+
+Modifier le Deployment
+
+modifier le `priorityClassName`
+
+```bash
+kubectl patch deployment busybox-logger -n priority -p '{"spec":{"template":{"spec":{"priorityClassName":"high-priority"}}}}'
+```
+ou bien (Recommended method)
+
+```bash
+kibectl edit deployment busybox-logger
+```
+Vérifier le rollout
+
+```bash
+kubectl rollout status deployment busybox-logger -n priority
+```
+
+Vérifier les Pods
+
+```bash
+kubectl get pods -n priority -o wide
+```
+Vérification de la priorité
+
+```bash
+kubectl describe pod <-deployment-pod-name> -n priority
+```
+Voir :
+
+```text
+Priority: 99999
+```
+
+---
