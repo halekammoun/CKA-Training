@@ -167,9 +167,9 @@ Open an interactive shell for Container 2 and navigate to the directory /etc/b/d
 # QUESTION 4
 
 Update the existing deployment synergy-leverager, adding a co-located container named sidecar using the busybox:stable image to the existing pod.
-The new co-located container has to run the following command: /bin/sh -c "tail -n+1 -f /var/log/synergy-leverager.
+The new co-located container has to run the following command: /bin/sh -c "tail -n+1 -f /var/log/synergy-leverager.log
 (in our case we will use the nginx image since we don't have the synergy-leverager image and the command will be /bin/sh -c "tail -n+1 -f /var/log/nginx/access.log")
-Use a volume mounted at /var/log to make the log file synergy-leverager.log (in our case access.log) available to the co-located container.
+Use a volume mounted at /var/log (in our case /var/log/nginx) to make the log file synergy-leverager.log (in our case access.log) available to the co-located container.
 
 before answering you should run this manifest
 ```bash
@@ -224,18 +224,18 @@ spec:
         image: nginx
         volumeMounts:
         - name: log-volume
-          mountPath: /var/log
+          mountPath: /var/log/nginx
       - name: sidecar
         image: busybox:stable
         command: ["/bin/sh", "-c", "tail -n+1 -f /var/log/nginx/access.log"]
         volumeMounts:
         - name: log-volume
-          mountPath: /var/log
+          mountPath: /var/log/nginx
 ```
 ```bash
 kubectl get pods
 ```
 ```bash
-kubectl exec -it <pod-name> -c main -- ls /var/log
-kubectl exec -it <pod-name> -c sidecar -- ls /var/log
+kubectl exec -it <pod-name> -c main -- ls /var/log/nginx
+kubectl exec -it <pod-name> -c sidecar -- ls /var/log/nginx
 ```
