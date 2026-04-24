@@ -193,7 +193,7 @@ spec:
 * `storageClassName: ""` → provisioning statique
 * Taille minimale demandée
 
-👉 Cela signifie :
+Cela signifie :
 “Donne-moi un PV de 256Mi avec accès ReadWriteOnce.”
 
 ---
@@ -236,6 +236,7 @@ metadata:
   name: specific-pvc
 spec:
   volumeName: db-pv
+  storageClassName: ""
   accessModes:
   - ReadWriteOnce
   resources:
@@ -523,6 +524,7 @@ spec:
     requests:
       storage: 250Mi
   volumeName: mariadb-pv 
+  storageClassName: ""
 ```
 ```bash
 kubectl apply -f pvc.yaml
