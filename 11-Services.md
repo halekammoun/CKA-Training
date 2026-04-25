@@ -251,9 +251,11 @@ echoserver.default.svc.cluster.local
 # Service NodePort
 
 Déclarer un Service de type **NodePort** permet de l’exposer via l’adresse IP d’un nœud et de le rendre accessible depuis l’extérieur du cluster Kubernetes. L’accès se fait avec l’IP du nœud et un port compris entre **30000 et 32767** (appelé node port), attribué automatiquement lors de la création du Service.
+
 <p align="center">
-  <img src3="svc3.png" alt="svc3" width="600"/>
+  <img src="svc3.png" alt="svc3" width="600"/>
 </p>
+
 Le node port est ouvert sur tous les nœuds du cluster, et sa valeur est unique au niveau du cluster. Pour éviter les conflits, il est recommandé de ne pas spécifier manuellement le port et de laisser Kubernetes en choisir un.
 <p align="center">
   <img src="svc4.png" alt="svc4" width="600"/>
