@@ -75,16 +75,20 @@ En pratique, on utilise souvent un **Deployment + Service** :
 ```bash 
 kubectl create deployment echoserver --image=hashicorp/http-echo:1.0.0 --replicas=5
 ```
+```bash
+docker images 
+docker image inspect <id-image> | grep -i5 port
+```
 ```bash 
-kubectl rdit deployment echoserver
+kubectl edit deployment echoserver
 ```
 ```bash 
 ports:
-    - containerPort: 8080
+    - containerPort: 5678
 ```
 
 ```bash
-kubectl expose deployment echoserver --port=80 --target-port=8080
+kubectl expose deployment echoserver --port=80 --target-port=5678
 ```
 
 Pour vérifier:
