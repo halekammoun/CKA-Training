@@ -423,3 +423,7 @@ sh -c "while true; do nc-zv database-service 3306; sleep 5; done"
 Verify that the frontend Pods can resolve and connect to the database Service
 ```
 
+# QUESTION
+Reconfigure the existing deployment front-end in namespace spline-reticulator to expose port 80/tcp of the existing container nginx.
+Create a new service named front-end-svc exposing the container port 80/tcp.
+Configure the new service to also expose the individual pod via a NodePort.
