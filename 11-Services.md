@@ -257,9 +257,11 @@ Déclarer un Service de type **NodePort** permet de l’exposer via l’adresse 
 </p>
 
 Le node port est ouvert sur tous les nœuds du cluster, et sa valeur est unique au niveau du cluster. Pour éviter les conflits, il est recommandé de ne pas spécifier manuellement le port et de laisser Kubernetes en choisir un.
+
 <p align="center">
-  <img src="svc4.png" alt="svc4" width="600"/>
+  <img src="svc4.png" alt="svc4" width="400"/>
 </p>
+
 #### Création et inspection du Service
 
 Les commandes suivantes créent un Pod et un Service de type NodePort :
