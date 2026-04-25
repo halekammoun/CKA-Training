@@ -42,7 +42,7 @@ Un Service utilise les labels pour cibler les Pods, mais le routage dépend du m
 Sinon → le Pod ne reçoit pas le trafic
 
 <p align="center">
-  <img src="svc1.png" alt="svc1" width="700"/>
+  <img src="svc1.png" alt="svc1" width="800"/>
 </p>---
 
 ## Création des Services
@@ -161,7 +161,7 @@ Si aucun endpoint :
 ---
 # Service ClusterIP
 <p align="center">
-  <img src="svc2.png" alt="svc2" width="700"/>
+  <img src="svc2.png" alt="svc2" width="600"/>
 </p>
 
 Nous allons créer un Pod et un Service pour démontrer le comportement du type **ClusterIP**.
@@ -252,11 +252,11 @@ echoserver.default.svc.cluster.local
 
 Déclarer un Service de type **NodePort** permet de l’exposer via l’adresse IP d’un nœud et de le rendre accessible depuis l’extérieur du cluster Kubernetes. L’accès se fait avec l’IP du nœud et un port compris entre **30000 et 32767** (appelé node port), attribué automatiquement lors de la création du Service.
 <p align="center">
-  <img src3="svc3.png" alt="svc3" width="700"/>
+  <img src3="svc3.png" alt="svc3" width="600"/>
 </p>
 Le node port est ouvert sur tous les nœuds du cluster, et sa valeur est unique au niveau du cluster. Pour éviter les conflits, il est recommandé de ne pas spécifier manuellement le port et de laisser Kubernetes en choisir un.
 <p align="center">
-  <img src="svc4.png" alt="svc4" width="700"/>
+  <img src="svc4.png" alt="svc4" width="600"/>
 </p>
 #### Création et inspection du Service
 
@@ -337,7 +337,7 @@ NodeIP:NodePort
 
 Le dernier type de Service est **LoadBalancer**. Ce type provisionne un load balancer externe (principalement via les fournisseurs cloud) qui expose une IP unique pour distribuer le trafic vers les nœuds du cluster. La stratégie de load balancing (ex : round-robin) dépend du provider.
 <p align="center">
-  <img src="svc5.png" alt="svc5" width="700"/>
+  <img src="svc5.png" alt="svc5" width="600"/>
 </p>
 
 Pour les clusters on-premise :
