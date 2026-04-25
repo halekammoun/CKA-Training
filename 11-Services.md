@@ -431,3 +431,13 @@ Verify that the frontend Pods can resolve and connect to the database Service
 Reconfigure the existing deployment front-end in namespace spline-reticulator to expose port 80/tcp of the existing container nginx.
 Create a new service named front-end-svc exposing the container port 80/tcp.
 Configure the new service to also expose the individual pod via a NodePort.
+```bash
+kubectl edit deploy front-end in -n spline-reticulator
+```
+```bash
+ports:
+- containerPort: 80
+```
+```bash
+kubectl expose deployment front-end --type=NodePort --port=80 --target-port=80 --name=front-end-svc -n spline-reticulator
+```
