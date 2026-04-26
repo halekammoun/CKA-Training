@@ -138,8 +138,16 @@ spec:
     matchLabels:
       app: payment-processor
       role: api
+  policyTypes:
+    - Egress
+    - Ingress
   ingress:
   - from:
+    - podSelector:
+        matchLabels:
+          app: coffee-shop
+  egress:
+  - to:
     - podSelector:
         matchLabels:
           app: coffee-shop
