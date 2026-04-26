@@ -63,4 +63,4 @@ Join us on this journey and become a certified Kubernetes administrator! 🚀
 - [15-Ingresses et Gateway API](13-Ingresses-and-Gateway-API.md) le 2/5/2026 --> *Question 8* 
 - [16-Authentication, Authorization, and Admission Control]() le 3/5/2026 --> included in ckad and old cka exam version
 - [17-Backing Up and Restoring etcd]() le 3/5/2026 --> included in old cka exam version
-- [18-Resource Requirements,Limits, et Quotas](11-Resource-Requirements-Limits-et-Quotas.md) 
+# - [18-Resource Requirements,Limits, et Quotas](11-Resource-Requirements-Limits-et-Quotas.md) 
