@@ -117,3 +117,41 @@ Supprime le chart + toutes ses ressources
 Install ArgoCD in the cluster by performing the following tasks: Add the official Argo CD Helm repository with the name argo.
 Generate a template of the ArgoCD Helm Chart version 7.7.3 for the argocd namespace and save it to ~/argo-helm.yaml. Configure the chart to not install CRDs.
 Note - The Argo CD CRDs have already been pre-installed in the cluster.
+
+# CORRECTION
+
+1. Ajouter le repository Helm
+```bash
+helm repo add argo https://argoproj.github.io/argo-helm
+helm repo update
+```
+2. Vérifier les valeurs disponibles du chart (IMPORTANT)
+
+```bash
+helm show values argo/argo-cd --version 7.7.3 | grep -i crd -A2
+```
+
+Résultat typique :
+```yaml
+crds:
+  install: true
+```
+
+Donc pour ne PAS installer les CRDs :
+```bash
+--set crds.install=false
+```
+
+3. Créer le namespace
+```bash
+kubectl create namespace argocd
+```
+
+4. Générer le template Helm
+```bash
+helm template argocd argo/argo-cd --version 7.7.3 --namespace argocd --set crds.install=false > ~/argo-helm.yaml
+```
+Vérification
+```bash
+ls -l ~/argo-helm.yaml
+```
