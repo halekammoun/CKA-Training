@@ -138,8 +138,16 @@ spec:
     matchLabels:
       app: payment-processor
       role: api
+  policyTypes:
+    - Egress
+    - Ingress
   ingress:
   - from:
+    - podSelector:
+        matchLabels:
+          app: coffee-shop
+  egress:
+  - to:
     - podSelector:
         matchLabels:
           app: coffee-shop
@@ -321,7 +329,7 @@ Create a default deny-all ingress policy for the namespace. production Verify yo
 ```
 # QUESTION 10
 Install and set up a Container Network Interface (CNI) that meets these requirements: Pick and install one of the CNI options:
-The CNI you choose must satisfy following requirement: <native network policy support>
+The CNI you choose must satisfy following requirement: *native network policy support*
 Flannel version 0.26.1  
 Manifest - https://github.com/flanner-io/flanner/releases/download/v0.26.1/kube-flanner.yml
 Calico version 3.28.2  
