@@ -176,39 +176,141 @@ error: le ingress ne pointe pas a un controller
 Solution: ajouter ingressClassName dans l'ingress
 
 
-<!-- #### Ingress avec HTTPS
+#### Ingress avec HTTPS
 
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: secure-app
-spec:
-  tls:
-  - hosts:
-    - secure.example.com
-    secretName: tls-secret
-  rules:
-  - host: secure.example.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: app-service
-            port:
-              number: 80
+Générer un certificat auto-signé
+```bash
+openssl req -x509 -nodes -days 365 \
+  -newkey rsa:2048 \
+  -keyout key.pem \
+  -out cert.pem \
+  -subj "/CN=web.local"
+```
+crée :
+- cert.pem
+- key.pem
 
-👉 Active HTTPS sur le domaine  
-👉 Kubernetes utilise le Secret TLS  
+Créer un Secret TLS
+```bash
+kubectl create secret tls tls-secret \
+  --cert=cert.pem \
+  --key=key.pem  
+```
+stocke le certificat dans Kubernetes.  
+
+Créer un Ingress sécurisé
+```bash
+apiVersion: networking.k8s.io/v1  
+kind: Ingress  
+metadata:  
+  name: web  
+  annotations:  
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"  
+spec:  
+  ingressClassName: nginx  
+  tls:  
+  - hosts:  
+    - web.local  
+    secretName: tls-secret  
+  rules:  
+  - host: web.local  
+    http:  
+      paths:  
+      - path: /  
+        pathType: Prefix  
+        backend:  
+          service:  
+            name: web  
+            port:  
+              number: 80  
+```
+fonctionnalités :
+HTTPS activé
+HTTP redirigé vers HTTPS
+
+Tester
+
+#### HTTP
+
+curl http://web.local  
+
+Résultat :
+
+308 Permanent Redirect  
+
+explication :
+HTTP → redirigé vers HTTPS
+
+#### HTTPS
+
+curl https://web.local  
+
+Résultat :
+
+SSL certificate problem  
+
+explication :
+certificat auto-signé → non trusted
 
 ---
 
+#### HTTPS (test forcé)
 
+curl -k https://web.local  
+
+Résultat :
+page nginx
+
+Exemple : plusieurs services avec paths
+
+On veut router :
+- /app → service app  
+- /metrics → service metrics  
+
+#### Ingress avec plusieurs paths
+
+
+Déployer services  
+```bash
+kubectl create deployment app --image=nginx  
+kubectl expose deployment app --port=80  
+kubectl create deployment metrics --image=nginx  
+kubectl expose deployment metrics --port=80  
+```
+```bash
+apiVersion: networking.k8s.io/v1  
+kind: Ingress  
+metadata:  
+  name: multi-app  
+spec:  
+  ingressClassName: nginx  
+  rules:  
+  - host: web.local  
+    http:  
+      paths:  
+      - path: /app  
+        pathType: Prefix  
+        backend:  
+          service:  
+            name: app  
+            port:  
+              number: 80  
+      - path: /metrics  
+        pathType: Prefix  
+        backend:  
+          service:  
+            name: metrics  
+            port:  
+              number: 80  
+```
+
+Tester
+```bash
+curl http://web.local/app  
+curl http://web.local/metrics  
+```
+chaque path est routé vers un service différent  
+
+---
 
 # QUESTION 12 nour
-# QUESTION 13 hale
-Migrate an existing web application from Ingress to Gateway API. You must maintain HTTPS access.
-First, create a Gateway named web-gateway with hostname gateway.web.k8s.local that maintains the existing TLS and listener configuration from the existing ingress resource named web.
-Next, create an HTTPRoute named web-route with hostname gateway.web.k8s.local that maintains the existing routing rules from the current Ingress resource named web.
-Note - A GatewayClass named nginx is installed in the cluster. -->
