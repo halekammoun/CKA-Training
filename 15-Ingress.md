@@ -269,7 +269,7 @@ On veut router :
 
 #### Ingress avec plusieurs paths
 
-
+Les paths doivent etre supporté par l'application ou précisement l'image
 Déployer services  
 ```bash
 kubectl create deployment app --image=nginx  
@@ -288,14 +288,14 @@ spec:
   - host: web.local  
     http:  
       paths:  
-      - path: /app  
+      - path: /  
         pathType: Prefix  
         backend:  
           service:  
             name: app  
             port:  
               number: 80  
-      - path: /metrics  
+      - path: /indes.html  
         pathType: Prefix  
         backend:  
           service:  
@@ -306,11 +306,91 @@ spec:
 
 Tester
 ```bash
-curl http://web.local/app  
-curl http://web.local/metrics  
+curl http://web.local/  
+curl http://web.local/index.html
 ```
 chaque path est routé vers un service différent  
 
 ---
 
-# QUESTION 12 nour
+# QUESTION 12 
+1. Expose the existing deployment with a service called echo-service using Service Port 8080 type=NodePort
+2. Create a new ingress resource named echo in the echo-sound namespace for http://example.org/echo
+3. The availability of the Service echo-service can be checked using the following command
+curl NODEIP:NODEPORT/echo
+
+# In the exam it may give you a command like curl -o /dev/null -s -w "%{http_code}\n" http://example.org/echo
+# This requires an ingress controller, to get this to work ensure your /etc/hosts file has an entry for your NodeIP
+# pointing to example.org
+script for lab setup 
+```bash
+#!/bin/bash
+set -e
+
+echo "Creating namespace: echo-sound"
+kubectl create ns echo-sound || true
+
+echo "Deploying Echo Server in namespace: echo-sound"
+cat <<EOF | kubectl -n echo-sound apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo
+  template:
+    metadata:
+      labels:
+        app: echo
+    spec:
+      containers:
+      - name: echo
+        image: gcr.io/google_containers/echoserver:1.10
+        ports:
+        - containerPort: 8080
+EOF
+
+echo "✅ Echo server deployment created successfully!"
+```
+
+# SOLUTION
+Expose deployment as NodePort
+
+```bash
+kubectl expose deployment echo -n echo-sound --name echo-service --type NodePort --port 8080 --target-port 8080
+```
+```bash
+kubectl get svc -n echo-sound echo-service
+```
+Create ingress
+```bash
+cat <<'EOF' > ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: echo
+  namespace: echo-sound
+spec:
+  rules:
+  - host: example.org
+    http:
+      paths:
+      - path: /echo
+        pathType: Prefix
+        backend:
+          service:
+            name: echo-service
+            port:
+              number: 8080
+EOF
+```
+```bash
+kubectl apply -f ingress.yaml
+```
+```bash
+kubectl get ingress -n echo-sound
+```
+Optional test (NodePort): curl http://<nodeIP>:<nodePort>/echo
