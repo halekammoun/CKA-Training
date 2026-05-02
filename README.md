@@ -57,10 +57,11 @@ Join us on this journey and become a certified Kubernetes administrator! 🚀
 - [09-Persistent-Volumes](09-Persistent-Volumes.md) le 19/4/2026 --> *Question 5* , *Question 7* 
 - [10-Scaling Workloads](10-Scaling-workloads.md) le 21/4/2026 --> *Question 1* , *Question 14*  
 - [11-Services](11-Services.md) le 25/4/2026 --> *Question 2* 
-- [12-Network-Policies](15-Network-policies.md) le 26/4/2026 --> *Question 9* , *Question 13* 
-- [13-Helm](14-Helm.md) le 28/4/2026 --> *Question 6* 
-- [14-Custom Resource Definition](16-Custom-Resource-Definition.md) le 30/4/2026 --> *Question 12* 
-- [15-Ingresses et Gateway API](13-Ingresses-and-Gateway-API.md) le 2/5/2026 --> *Question 8* 
-- [16-Authentication, Authorization, and Admission Control]() le 3/5/2026 --> included in ckad and old cka exam version
-- [17-Backing Up and Restoring etcd]() le 3/5/2026 --> included in old cka exam version
+- [12-Network-Policies](12-Network-policies.md) le 26/4/2026 --> *Question 9* , *Question 13* 
+- [13-Helm](13-Helm.md) le 28/4/2026 --> *Question 6* 
+- [14-Custom Resource Definition](14-Custom-Resource-Definition.md) le 30/4/2026 --> *Question 12* 
+- [15-Ingresses et Gateway API](15-Ingress.md) le 2/5/2026 --> *Question 8* 
+- [16-Gateway API](16-Gateway-api.md) le 2/5/2026 --> *Question 8* 
+- [17-Authentication, Authorization, and Admission Control]() le 3/5/2026 --> included in ckad and old cka exam version
+- [18-Backing Up and Restoring etcd]() le 3/5/2026 --> included in old cka exam version
 # - [18-Resource Requirements,Limits, et Quotas](11-Resource-Requirements-Limits-et-Quotas.md) 

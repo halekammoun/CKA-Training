@@ -511,6 +511,7 @@ pour lister les static pods créé par le kubelet on fait
 crictrl ps
 ```
 ---
+
 # QUESTION 1
 The kubernetes cluster is not working. Some components are down after a cluster migration.
 Troubleshoot and fix the cluster
