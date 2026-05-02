@@ -98,7 +98,7 @@ kubectl expose deployment web --port=80
 crée pod + service
 
 #### Créer un Ingress
-
+```bash
 apiVersion: networking.k8s.io/v1  
 kind: Ingress  
 metadata:  
@@ -116,7 +116,7 @@ spec:
             name: web  
             port:  
               number: 80  
-
+```
 règle :
 - host = web.local
 - route vers service web
