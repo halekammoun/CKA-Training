@@ -122,11 +122,12 @@ règle :
 - route vers service web
 
 #### Configurer DNS local
-
+```bash
 sudo nano /etc/hosts  
-
+```
+```bash
 192.168.1.241 web.local  
-
+```
 IP = celle du LoadBalancer
 
 #### Tester
@@ -164,7 +165,7 @@ Différence : gestion du `/` final
 
 Si un service n’existe pas :
 
-error: endpoints not found
+error: 503 service temporarely unavaiable
 
 Solution : créer le Pod + Service
 
