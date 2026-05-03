@@ -62,6 +62,6 @@ Join us on this journey and become a certified Kubernetes administrator! 🚀
 - [14-Custom Resource Definition](14-Custom-Resource-Definition.md) le 30/4/2026 --> *Question 12* 
 - [15-Ingresses et Gateway API](15-Ingress.md) le 2/5/2026 --> *Question 8* 
 - [16-Gateway API](16-Gateway-api.md) le 2/5/2026 --> *Question 8* 
-# - [17-Authentication, Authorization, and Admission Control]() le 3/5/2026 --> included in ckad and old cka exam version
-# - [18-Backing Up and Restoring etcd]() le 3/5/2026 --> included in old cka exam version
-# - [18-Resource Requirements,Limits, et Quotas](11-Resource-Requirements-Limits-et-Quotas.md) 
+ <!-- - [17-Authentication, Authorization, and Admission Control]() le 3/5/2026  included in ckad and old cka exam version
+- [18-Backing Up and Restoring etcd]() le 3/5/2026  included in old cka exam version
+- [18-Resource Requirements,Limits, et Quotas](11-Resource-Requirements-Limits-et-Quotas.md)  -->
