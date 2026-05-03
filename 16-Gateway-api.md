@@ -43,34 +43,44 @@ règles de routage vers les services
 permet le routage entre namespaces  
 
 
-#### Installer les CRDs Gateway API
+#### Installer MetalLB
+
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.12/config/manifests/metallb-native.yaml
+
+Configurer un pool d’IP :
+
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 192.168.49.240-192.168.49.250
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: adv
+  namespace: metallb-system
+
+kubectl apply -f metallb-config.yaml
+
+👉 MetalLB fournit une IP externe comme un cloud provider
+#### Installer Gateway API et le controller
 
 Par défaut, la Gateway API n’est pas installée.
 ```bash
-kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.3.0/standard-install.yaml
+helm install eg oci://docker.io/envoyproxy/gateway-helm \
+--version v1.4.2 \
+-n envoy-gateway-system \
+--create-namespace
 ```
-Installe les CRDs  
-```bash
-kubectl get crds | grep gateway.networking.k8s.io
-```
-Liste :
-- gatewayclasses  
-- gateways  
-- httproutes  
-- grpcroutes  
-- referencegrants  
+Cette commande :
+- installe CRDs + controller  
+- crée le deployment envoy-gateway  
 
-#### Installer un Gateway Controller
-
-La Gateway API nécessite un controller.
-
-Exemple avec Envoy :
-```bash
-helm install eg oci://docker.io/envoyproxy/gateway-helm --version v1.4.2 \
--n envoy-gateway-system --create-namespace
-```
-Installe le controller  
-
+Vérifier le controller
 ```bash
 kubectl wait --timeout=5m -n envoy-gateway-system deployment/envoy-gateway \
 --for=condition=Available
@@ -145,17 +155,9 @@ Définit le routage vers un Service
 kubectl get httproutes
 ```
 
-#### Accéder au Gateway
-
-Récupérer le service Envoy :
+#### Ajouter DNS local
 ```bash
-export ENVOY_SERVICE=$(kubectl get svc -n envoy-gateway-system \
---selector=gateway.envoyproxy.io/owning-gateway-name=hello-world-gateway \
--o jsonpath='{.items[0].metadata.name}')
-```
-#### Port forward
-```bash
-kubectl -n envoy-gateway-system port-forward service/${ENVOY_SERVICE} 8889:80
+echo "192.168.49.240 hello-world.exposed" >> /etc/hosts
 ```
 
 #### Tester
@@ -167,7 +169,181 @@ Hello World
 
 
 # QUESTION 13
-Migrate an existing web application from Ingress to Gateway API. You must maintain HTTPS access.
-First, create a Gateway named web-gateway with hostname gateway.web.k8s.local that maintains the existing TLS and listener configuration from the existing ingress resource named web.
-Next, create an HTTPRoute named web-route with hostname gateway.web.k8s.local that maintains the existing routing rules from the current Ingress resource named web.
-Note - A GatewayClass named nginx is installed in the cluster. -->
+You have an existing web application deployed in a Kubernetes cluster using an Ingress resource named web.
+You must migrate the existing Ingress configuration to the new Kubernetes Gateway API, maintaining the existing HTTPS access configuration
+1. Create a Gateway Resource named web-gateway with hostname gateway.web.k8s.local that maintains the exisiting TLS and listener configuration from the existing Ingress resource named web
+Create a HTTPRoute resource named web-route with hostname gateway.web.k8s.local that maintains the existing routing rules from the current Ingress resource named web.
+Note: A GatewayClass named nginx-class is already installed in the cluster
+
+script for question setup
+```bash
+#!/bin/bash
+set -e
+
+echo "🚀 Setting up Kubernetes Gateway API migration lab..."
+
+# 1. Install Gateway API CRDs (official source)
+echo "📦 Installing Gateway API CRDs..."
+kubectl apply -k "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v1.1.0" >/dev/null
+
+# 2. Deploy a simple nginx web app
+cat <<EOF | kubectl apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: web
+        image: nginx
+        ports:
+        - containerPort: 80
+EOF
+
+# 3. Create a service for the web app
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+spec:
+  selector:
+    app: web
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+EOF
+
+# 4. Create a self-signed TLS certificate and secret
+echo "🔐 Creating TLS certificate..."
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout tls.key -out tls.crt \
+  -subj "/CN=gateway.web.k8s.local/O=web" >/dev/null 2>&1
+
+kubectl create secret tls web-tls --cert=tls.crt --key=tls.key >/dev/null
+rm -f tls.crt tls.key
+
+# 5. Create an existing Ingress resource (to migrate from)
+cat <<EOF | kubectl apply -f -
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  tls:
+  - hosts:
+    - gateway.web.k8s.local
+    secretName: web-tls
+  rules:
+  - host: gateway.web.k8s.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web-service
+            port:
+              number: 80
+EOF
+
+# 6. Create a working GatewayClass (using a mock nginx controller)
+cat <<EOF | kubectl apply -f -
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: nginx-class
+spec:
+  controllerName: example.net/nginx-gateway-controller
+EOF
+
+echo
+echo "✅ Gateway API lab setup complete!"
+echo
+echo "Resources created:"
+echo "  - Deployment: web-deployment"
+echo "  - Service: web-service"
+echo "  - Ingress: web"
+echo "  - GatewayClass: nginx-class"
+echo
+echo "🎯 Next steps:"
+echo "  1️⃣  Create a Gateway named web-gateway using hostname gateway.web.k8s.local and nginx-class."
+echo "  2️⃣  Create a HTTPRoute named web-route referencing web-service."
+echo "  3️⃣  Use 'kubectl get gatewayclass,gateway,httproute -A' to verify."
+```
+# SOLUTION
+```bash
+# Step 1: Inspect existing assets (host, secret, backend service/port)
+kubectl describe ingress web
+kubectl describe secret web-tls
+```
+```bash
+# Step 2: Create Gateway (mirrors Ingress host + TLS)
+cat <<'EOF' > gw.yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: web-gateway
+spec:
+  gatewayClassName: nginx-class
+  listeners:
+  - name: https
+    protocol: HTTPS
+    port: 443
+    hostname: gateway.web.k8s.local
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        name: web-tls
+EOF
+```
+```bash
+kubectl apply -f gw.yaml
+```
+```bash
+kubectl get gateway
+```
+```bash
+# Step 3: Create HTTPRoute (mirrors Ingress rules)
+cat <<'EOF' > http.yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: web-route
+spec:
+  parentRefs:
+  - name: web-gateway
+  hostnames:
+  - "gateway.web.k8s.local"
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: web-service
+      port: 80
+EOF
+```
+```bash
+kubectl apply -f http.yaml
+```bash
+```bash
+# Step 4: Verify
+kubectl describe gateway web-gateway
+kubectl describe httproute web-route
+```
+
