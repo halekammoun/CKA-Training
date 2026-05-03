@@ -144,7 +144,7 @@ spec:
         value: /
     backendRefs:
     - name: web
-      port: 3000
+      port: 80
 ```
 ```bash
 kubectl apply -f httproute.yaml
@@ -162,7 +162,7 @@ echo "192.168.49.240 hello-world.exposed" >> /etc/hosts
 
 #### Tester
 ```bash
-curl hello-world.exposed:8889
+curl hello-world.exposed:80
 ```
 Résultat :
 Hello World
