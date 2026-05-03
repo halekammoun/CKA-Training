@@ -243,6 +243,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
+  ingressClassName: nginx
   tls:
   - hosts:
     - gateway.web.k8s.local
@@ -267,7 +268,7 @@ kind: GatewayClass
 metadata:
   name: nginx-class
 spec:
-  controllerName: example.net/nginx-gateway-controller
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
 EOF
 
 echo
