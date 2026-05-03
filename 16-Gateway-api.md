@@ -68,7 +68,7 @@ metadata:
 kubectl apply -f metallb-config.yaml
 ```
 MetalLB fournit une IP externe comme un cloud provider
-#### Installer Gateway API et le controller
+#### Installer Gateway API CRDS et le controller
 
 Par défaut, la Gateway API n’est pas installée.
 ```bash
