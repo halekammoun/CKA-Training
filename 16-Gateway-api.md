@@ -44,11 +44,11 @@ permet le routage entre namespaces
 
 
 #### Installer MetalLB
-
+```bash
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.12/config/manifests/metallb-native.yaml
-
+```
 Configurer un pool d’IP :
-
+```bash
 apiVersion: metallb.io/v1beta1
 kind: IPAddressPool
 metadata:
@@ -63,10 +63,11 @@ kind: L2Advertisement
 metadata:
   name: adv
   namespace: metallb-system
-
+```
+```bash
 kubectl apply -f metallb-config.yaml
-
-👉 MetalLB fournit une IP externe comme un cloud provider
+```
+MetalLB fournit une IP externe comme un cloud provider
 #### Installer Gateway API et le controller
 
 Par défaut, la Gateway API n’est pas installée.
@@ -171,8 +172,8 @@ Hello World
 # QUESTION 13
 You have an existing web application deployed in a Kubernetes cluster using an Ingress resource named web.
 You must migrate the existing Ingress configuration to the new Kubernetes Gateway API, maintaining the existing HTTPS access configuration
-1. Create a Gateway Resource named web-gateway with hostname gateway.web.k8s.local that maintains the exisiting TLS and listener configuration from the existing Ingress resource named web
-Create a HTTPRoute resource named web-route with hostname gateway.web.k8s.local that maintains the existing routing rules from the current Ingress resource named web.
+1. Create a Gateway Resource named web-gateway with hostname gateway.web.k8s.local that maintains the exisiting TLS and listener configuration from the existing Ingress resource named web.
+2. Create a HTTPRoute resource named web-route with hostname gateway.web.k8s.local that maintains the existing routing rules from the current Ingress resource named web.  
 Note: A GatewayClass named nginx-class is already installed in the cluster
 
 script for question setup
